@@ -8,31 +8,52 @@ export async function onRequestPost(context) {
     return json({ error: 'Invalid request body' }, 400);
   }
 
-  const { contactName, company, optionName, price } = body;
+  const { contactName, company, email, phone, optionName, price } = body;
 
-  if (!contactName || !company || !optionName || !price) {
+  if (!contactName || !company || !email || !optionName || !price) {
     return json({ error: 'Missing required fields' }, 400);
   }
 
+  const headers = {
+    'api-key': env.INVOILESS_API_KEY,
+    'Content-Type': 'application/json',
+  };
+
+  // Step 1 — create or find the customer
+  const customerRes = await fetch('https://api.invoiless.com/v1/customers', {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      billTo: {
+        company,
+        firstName: contactName.split(' ')[0],
+        lastName:  contactName.split(' ').slice(1).join(' ') || '',
+        email,
+        phone: phone || '',
+      },
+    }),
+  });
+
+  if (!customerRes.ok) {
+    const err = await customerRes.text();
+    console.error('Invoiless customer error:', err);
+    return json({ error: 'Failed to create customer' }, 500);
+  }
+
+  const customer = await customerRes.json();
+
+  // Step 2 — create the draft invoice linked to that customer
   const invoiceRes = await fetch('https://api.invoiless.com/v1/invoices', {
     method: 'POST',
-    headers: {
-      'api-key': env.INVOILESS_API_KEY,
-      'Content-Type': 'application/json',
-    },
+    headers,
     body: JSON.stringify({
       status: 'Draft',
-      customer: {
-        billTo: {
-          name: contactName,
-          company: company,
-        },
-      },
+      customer: customer.id,
       items: [
         {
-          name: optionName,
+          name:     optionName,
           quantity: 1,
-          price: price,
+          price:    price,
         },
       ],
     }),
@@ -40,7 +61,7 @@ export async function onRequestPost(context) {
 
   if (!invoiceRes.ok) {
     const err = await invoiceRes.text();
-    console.error('Invoiless error:', err);
+    console.error('Invoiless invoice error:', err);
     return json({ error: 'Failed to create invoice' }, 500);
   }
 

@@ -373,6 +373,14 @@
 </head>
 
 <body>
+  <div id="client-data"
+    data-contact="{{CONTACT_NAME}}"
+    data-company="{{COMPANY}}"
+    data-email="{{EMAIL}}"
+    data-phone="{{PHONE}}"
+    hidden>
+  </div>
+
   <main class="proposal" aria-labelledby="proposal-title">
     <header>
       <h1 id="proposal-title">{{CLIENT_NAME}} — Website Proposal</h1>
@@ -632,6 +640,14 @@
 
   <script>
     // ── Option selection ─────────────────────────────────────
+    const clientEl = document.getElementById('client-data');
+    const client = {
+      contactName: clientEl.dataset.contact,
+      company:     clientEl.dataset.company,
+      email:       clientEl.dataset.email,
+      phone:       clientEl.dataset.phone,
+    };
+
     document.querySelectorAll('.select-btn').forEach(btn => {
       const msg = document.createElement('p');
       msg.className = 'select-msg';
@@ -647,10 +663,9 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              contactName: '{{CONTACT_NAME}}',
-              company:     '{{COMPANY}}',
-              optionName:  btn.dataset.option,
-              price:       Number(btn.dataset.price),
+              ...client,
+              optionName: btn.dataset.option,
+              price:      Number(btn.dataset.price),
             }),
           });
 
@@ -664,7 +679,6 @@
           }
         } catch {
           btn.textContent = 'Select Option';
-          btn.disabled = false;
           allBtns.forEach(b => b.disabled = false);
           msg.textContent = 'Something went wrong — please email us directly.';
           msg.classList.add('visible');

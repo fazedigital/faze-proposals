@@ -9,6 +9,9 @@ const config = {
   validUntil:   'May 12, 2026',
   meetingDate:  'April 24, 2026',
 
+  email:       'sarah@northwoodlegal.com',
+  phone:       '555-000-0000',
+
   solving: 'Your current site isn\'t reflecting the caliber of work you do — prospects are landing on it and you\'re not confident it\'s helping you close. You want a site that builds trust fast and makes it easy for the right clients to reach out.',
 
   opt1: {
@@ -76,6 +79,8 @@ const replacements = {
   '{{CLIENT_NAME}}':   config.clientName,
   '{{CONTACT_NAME}}':  config.contactName,
   '{{COMPANY}}':       config.company,
+  '{{EMAIL}}':         config.email,
+  '{{PHONE}}':         config.phone,
   '{{DATE}}':          config.date,
   '{{VALID_UNTIL}}':   config.validUntil,
   '{{MEETING_DATE}}':  config.meetingDate,
