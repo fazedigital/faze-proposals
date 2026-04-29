@@ -15,18 +15,21 @@ const config = {
     name:     'Website Blueprint',
     bestFor:  'You have an internal team to execute — you need the strategy and direction.',
     price:    '$4,500',
+    priceRaw: 4500,
   },
 
   opt2: {
     name:     'Strategy-Led Website',
     bestFor:  'You want it done right without managing it yourself.',
     price:    '$7,500',
+    priceRaw: 7500,
   },
 
   opt3: {
     name:     'Full Website System',
     bestFor:  'You want the highest-confidence path with the least risk.',
     price:    '$12,000',
+    priceRaw: 12000,
   },
 
   // Deliverable cells — use '✓', '—', or descriptive text
@@ -86,9 +89,12 @@ const replacements = {
   '{{OPT2_BEST_FOR}}': config.opt2.bestFor,
   '{{OPT3_BEST_FOR}}': config.opt3.bestFor,
 
-  '{{OPT1_PRICE}}':    config.opt1.price,
-  '{{OPT2_PRICE}}':    config.opt2.price,
-  '{{OPT3_PRICE}}':    config.opt3.price,
+  '{{OPT1_PRICE}}':     config.opt1.price,
+  '{{OPT2_PRICE}}':     config.opt2.price,
+  '{{OPT3_PRICE}}':     config.opt3.price,
+  '{{OPT1_PRICE_RAW}}': String(config.opt1.priceRaw),
+  '{{OPT2_PRICE_RAW}}': String(config.opt2.priceRaw),
+  '{{OPT3_PRICE_RAW}}': String(config.opt3.priceRaw),
 
   '{{OPT1_STRATEGY}}': d.strategy[0],  '{{OPT2_STRATEGY}}': d.strategy[1],  '{{OPT3_STRATEGY}}': d.strategy[2],
   '{{OPT1_SITEMAP}}':  d.sitemap[0],   '{{OPT2_SITEMAP}}':  d.sitemap[1],   '{{OPT3_SITEMAP}}':  d.sitemap[2],

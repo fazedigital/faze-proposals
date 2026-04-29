@@ -267,6 +267,47 @@
       line-height: 1.55;
     }
 
+    .select-row td {
+      border-top: 2px solid var(--line);
+      padding: 0.6rem 0.55rem;
+      vertical-align: middle;
+    }
+
+    .select-row td:nth-child(3) {
+      background: var(--shade);
+    }
+
+    .select-btn {
+      display: inline-block;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+
+    .select-btn:hover { opacity: 0.8; }
+    .select-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .select-btn.is-selected {
+      background: #2a7a2a;
+    }
+
+    .select-msg {
+      display: none;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .select-msg.visible { display: block; }
+
     @media (max-width: 820px) {
       .terms-grid {
         grid-template-columns: 1fr;
@@ -326,6 +367,7 @@
       .rule { margin: 10pt 0; }
 
       .def-row { display: none !important; }
+      .select-row { display: none !important; }
     }
   </style>
 </head>
@@ -540,6 +582,25 @@
               <td>{{OPT3_PRICE}}</td>
             </tr>
 
+            <tr class="select-row">
+              <td></td>
+              <td>
+                <button class="select-btn" data-option="{{OPT1_NAME}}" data-price="{{OPT1_PRICE_RAW}}">
+                  Select Option 1
+                </button>
+              </td>
+              <td>
+                <button class="select-btn" data-option="{{OPT2_NAME}}" data-price="{{OPT2_PRICE_RAW}}">
+                  Select Option 2
+                </button>
+              </td>
+              <td>
+                <button class="select-btn" data-option="{{OPT3_NAME}}" data-price="{{OPT3_PRICE_RAW}}">
+                  Select Option 3
+                </button>
+              </td>
+            </tr>
+
           </tbody>
         </table>
       </div>
@@ -570,6 +631,48 @@
   </main>
 
   <script>
+    // ── Option selection ─────────────────────────────────────
+    document.querySelectorAll('.select-btn').forEach(btn => {
+      const msg = document.createElement('p');
+      msg.className = 'select-msg';
+      btn.after(msg);
+
+      btn.addEventListener('click', async () => {
+        const allBtns = document.querySelectorAll('.select-btn');
+        allBtns.forEach(b => b.disabled = true);
+        btn.textContent = 'Sending…';
+
+        try {
+          const res = await fetch('/select-option', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contactName: '{{CONTACT_NAME}}',
+              company:     '{{COMPANY}}',
+              optionName:  btn.dataset.option,
+              price:       Number(btn.dataset.price),
+            }),
+          });
+
+          if (res.ok) {
+            btn.textContent = '✓ Request received';
+            btn.classList.add('is-selected');
+            msg.textContent = 'We\'ll be in touch shortly to confirm next steps.';
+            msg.classList.add('visible');
+          } else {
+            throw new Error();
+          }
+        } catch {
+          btn.textContent = 'Select Option';
+          btn.disabled = false;
+          allBtns.forEach(b => b.disabled = false);
+          msg.textContent = 'Something went wrong — please email us directly.';
+          msg.classList.add('visible');
+        }
+      });
+    });
+
+    // ── Accordion ────────────────────────────────────────────
     let openBtn = null;
 
     function closeAll() {
