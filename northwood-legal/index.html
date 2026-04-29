@@ -686,6 +686,14 @@
         if (data.selected) {
           localStorage.setItem(STORAGE_KEY, data.selected);
           lockSelection(data.selected);
+        } else {
+          // KV cleared — unlock and reset local cache
+          localStorage.removeItem(STORAGE_KEY);
+          allBtns.forEach(b => {
+            b.disabled = false;
+            b.classList.remove('is-selected');
+            b.textContent = 'Select ' + b.dataset.option;
+          });
         }
       })
       .catch(() => {});
