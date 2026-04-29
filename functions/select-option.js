@@ -36,7 +36,8 @@ export async function onRequestPost(context) {
 
   if (!customerRes.ok) {
     const err = await customerRes.text();
-    return json({ error: 'Failed to create customer', detail: err, status: customerRes.status }, 500);
+    console.error('Invoiless customer error:', err);
+    return json({ error: 'Failed to create customer' }, 500);
   }
 
   const customer = await customerRes.json();
