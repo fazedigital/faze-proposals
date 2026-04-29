@@ -652,17 +652,18 @@
 
   <script>
     // ── Option selection ─────────────────────────────────────
-    const clientEl  = document.getElementById('client-data');
-    const client    = {
+    const clientEl = document.getElementById('client-data');
+    const client   = {
       contactName: clientEl.dataset.contact,
       company:     clientEl.dataset.company,
       email:       clientEl.dataset.email,
       phone:       clientEl.dataset.phone,
     };
-    const STORAGE_KEY = 'proposal-selected:' + window.location.pathname;
+    const slug        = window.location.pathname.replace(/^\/|\/$/g, '');
+    const STORAGE_KEY = 'proposal-selected:' + slug;
     const allBtns     = document.querySelectorAll('.select-btn');
 
-    function lockSelection(selectedOption, message) {
+    function lockSelection(selectedOption) {
       allBtns.forEach(b => {
         b.disabled = true;
         if (b.dataset.option === selectedOption) {
@@ -672,16 +673,22 @@
           b.textContent = '—';
         }
       });
-      if (message) {
-        const msg = document.querySelector('.select-msg.visible') || document.createElement('p');
-        msg.textContent = message;
-        msg.className = 'select-msg visible';
-      }
     }
 
-    // Restore selection on page load
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) lockSelection(saved);
+    // Fast local check first
+    const savedLocal = localStorage.getItem(STORAGE_KEY);
+    if (savedLocal) lockSelection(savedLocal);
+
+    // Server-side check — source of truth
+    fetch('/select-option?slug=' + encodeURIComponent(slug))
+      .then(r => r.json())
+      .then(data => {
+        if (data.selected) {
+          localStorage.setItem(STORAGE_KEY, data.selected);
+          lockSelection(data.selected);
+        }
+      })
+      .catch(() => {});
 
     allBtns.forEach(btn => {
       const msg    = document.createElement('p');
@@ -718,6 +725,7 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              slug,
               ...client,
               optionName: btn.dataset.option,
               price:      Number(btn.dataset.price),
