@@ -20,7 +20,7 @@ export async function onRequestPost(context) {
   };
 
   // Step 1 — create or find the customer
-  const customerRes = await fetch('https://api.invoiless.com/api/v1/customers', {
+  const customerRes = await fetch('https://api.invoiless.com/v1/customers', {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -42,7 +42,7 @@ export async function onRequestPost(context) {
   const customer = await customerRes.json();
 
   // Step 2 — create the draft invoice linked to that customer
-  const invoiceRes = await fetch('https://api.invoiless.com/api/v1/invoices', {
+  const invoiceRes = await fetch('https://api.invoiless.com/v1/invoices', {
     method: 'POST',
     headers,
     body: JSON.stringify({
