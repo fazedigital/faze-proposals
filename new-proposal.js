@@ -1,32 +1,32 @@
 // ── Proposal config — fill this in, then run: node new-proposal.js ──────────
 
 const config = {
-  slug:         'client-name',              // URL: proposal.masstilt.com/client-name
-  clientName:   'Client Name',
-  contactName:  'First Last',
-  company:      'Company Name',
-  date:         'April 29, 2026',
-  validUntil:   'May 13, 2026',
-  meetingDate:  'April 28, 2026',
+  slug:         'northwood-legal',
+  clientName:   'Northwood Legal',
+  contactName:  'Sarah Brennan',
+  company:      'Northwood Legal Group',
+  date:         'April 28, 2026',
+  validUntil:   'May 12, 2026',
+  meetingDate:  'April 24, 2026',
 
-  solving: 'Write 1–2 sentences in their words — the desired future state from the value conversation.',
+  solving: 'Your current site isn\'t reflecting the caliber of work you do — prospects are landing on it and you\'re not confident it\'s helping you close. You want a site that builds trust fast and makes it easy for the right clients to reach out.',
 
   opt1: {
-    name:     'Website Blueprint',
-    bestFor:  'You have an internal team to execute — you need the strategy and direction.',
+    name:     'Authority Blueprint',
+    bestFor:  'You have a team to execute — you need the strategy and direction.',
     price:    '$4,500',
     priceRaw: 4500,
   },
 
   opt2: {
-    name:     'Strategy-Led Website',
+    name:     'Authority Website',
     bestFor:  'You want it done right without managing it yourself.',
     price:    '$7,500',
     priceRaw: 7500,
   },
 
   opt3: {
-    name:     'Full Website System',
+    name:     'Full Authority System',
     bestFor:  'You want the highest-confidence path with the least risk.',
     price:    '$12,000',
     priceRaw: 12000,
